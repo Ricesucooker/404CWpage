@@ -9,7 +9,7 @@ let context;
 
 let owlWidth = 100;
 let owlHeight = 125;
-let owlX = 350 ;
+let owlX = boardWidth / owlWidth ;
 let owlY = boardHeight - owlHeight;
 let owlJPG;
 
@@ -39,9 +39,8 @@ let logoPsa;
 
 //physic and game
 let velocityX = 0;
-let velocityY = +6;
-let gravity = 0;
-let owlVX =1;
+let velocityY = 0;
+let owlVX =0;
 
 let gameOver = false;
 let score =0;
@@ -85,23 +84,37 @@ window.onload = function(){
 };
 
 function update(){
+    if(gameOver){
+        return;
+    }
     requestAnimationFrame(update);
    
-
     context.clearRect(0,0,board.width, board.height);
 
     //owl
     //owl.x=Math.mid(owl.x - owlVX, owlX)
-    owlVX += gravity;
-    owl.x += owlVX, owlX; 
     context.drawImage(owlJPG, owl.x, owl.y, owl.width, owl.height);
 
     //logo
     for(let i =0; i < cwArray.length; i++){
+        if(gameOver){
+            window.alert("game over")
+            return;
+        }
         let logo = cwArray[i];
-        logo.y += velocityY;
+        logo.y += velocityY +3;
         context.drawImage(logo.img, logo.x, logo.y, logo.width, logo.height);
+
+        if (dectCollision(owl,logo)){
+            gameOver =true;
+        }
     }
+
+    //score 
+    context.fillStyle="black";
+    context.font="20px courier";
+    score ++;
+    context.fillText(score, 5,20);
 };
 
 
@@ -111,13 +124,13 @@ function moveOwl(e){
     }
 
     if (e.code == "KeyD" || e.code == "ArrowRight"){
-         owlVX = +3 ;}
-
+         owlVX =+50;
+         owl.x =Math.max(owl.x + owlVX, owlX );}
     if(e.code == "KeyA" || e.code =="ArrowLeft"){
-        owlVX =-3 ;}
-    
-        console.log(e.code)
+        owlVX =-50 
+        owl.x =Math.max(owl.x + owlVX, 10);;}
 }
+
 
 
 function getRandomInt(max){
@@ -157,6 +170,14 @@ function placeLogo(){
 
 }
 
+
+
+function dectCollision (a,b){
+    return a.x < a.x +  b.width && 
+            a.x +  a.width > b.x &&
+            a.y < b.y + b.height &&
+            a.y + a.height > b.y;
+}
 
 
 // x0 
