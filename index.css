@@ -7,3 +7,25 @@ body{
     background-color: lightgray;
     border: 1.5px solid black;
 }
+
+
+#pHeading{
+    opacity: 0.01; 
+    position: absolute; 
+    z-index: -1000; 
+    width: 54px; 
+    height: 22px; 
+    text-align: end;
+   
+}
+
+#main{
+
+}
+
+#nav{
+    display: flex; width: 100%; 
+    margin: 0px;
+    border: 1.5px black solid;
+    
+}
