@@ -8,7 +8,7 @@ let context;
 //owl
 
 let owlWidth = 100;
-let owlHeight = 125;
+let owlHeight = 120;
 let owlX = boardWidth / owlWidth ;
 let owlY = boardHeight - owlHeight;
 let owlJPG;
@@ -47,6 +47,7 @@ let score =0;
 
 
 window.onload = function(){
+    
     board = document.getElementById("board")
     board.height = boardHeight;
     board.width = boardWidth;
@@ -74,61 +75,54 @@ window.onload = function(){
     logoPsa = new Image();
     logoPsa.src="./cwasset/psa.png";
 
-    
 
-
-   requestAnimationFrame(update);
+ 
    setInterval(placeLogo, 1000);
    document.addEventListener("keydown", moveOwl);
+   requestAnimationFrame(update);
 
 };
 
 function update(){
-    if(gameOver){
-        return;
-    }
     requestAnimationFrame(update);
-   
-    context.clearRect(0,0,board.width, board.height);
-
-    //owl
-    //owl.x=Math.mid(owl.x - owlVX, owlX)
+   context.clearRect(0.1,0.1,board.width, board.height);
     context.drawImage(owlJPG, owl.x, owl.y, owl.width, owl.height);
 
+    
     //logo
     for(let i =0; i < cwArray.length; i++){
         if(gameOver){
-            window.alert("game over")
             return;
         }
         let logo = cwArray[i];
-        logo.y += velocityY +3;
+        logo.y += velocityY +2 ;
         context.drawImage(logo.img, logo.x, logo.y, logo.width, logo.height);
 
-        if (dectCollision(owl,logo)){
+        if (dectCollision(logo,owl)){
             gameOver =true;
+            requestAnimationFrame(update);
+            window.alert("GameOver\n");
         }
     }
 
     //score 
     context.fillStyle="black";
-    context.font="20px courier";
+    context.font="25px courier";
     score ++;
     context.fillText(score, 5,20);
 };
 
 
 function moveOwl(e){
-    if(gameOver){
-        return;
-    }
-
     if (e.code == "KeyD" || e.code == "ArrowRight"){
-         owlVX =+50;
-         owl.x =Math.max(owl.x + owlVX, owlX );}
+         owlVX =+12.5;
+         owl.x =Math.max(owl.x + owlVX, owlX +0.25 );}
     if(e.code == "KeyA" || e.code =="ArrowLeft"){
-        owlVX =-50 
-        owl.x =Math.max(owl.x + owlVX, 10);;}
+        owlVX =-12.5
+        owl.x =Math.max(owl.x + owlVX, owlX +0.25);;}
+     if(gameOver){
+            return;
+        }
 }
 
 
@@ -172,11 +166,11 @@ function placeLogo(){
 
 
 
-function dectCollision (a,b){
-    return a.x < a.x +  b.width && 
-            a.x +  a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y;
+function dectCollision (a, b){
+    return  a.x < b.x + b.width -3   &&  //top left conner not hit top right  
+            a.x + a.width -3  > b.x && //top right conner dont hit b top left
+            a.y < b.y + b.height -3 &&  
+            a.y + a.height -3  > b.y;
 }
 
 
